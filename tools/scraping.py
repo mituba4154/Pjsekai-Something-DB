@@ -8,7 +8,7 @@ try:
     import unidic_lite
 except ModuleNotFoundError as error:
     raise SystemExit(
-        "必要なライブラリが見つかりません。`pip install requests beautifulsoup4 fugashi unidic-lite` を実行してください。"
+        f"必要なライブラリ ({error.name}) が見つかりません。`pip install requests beautifulsoup4 fugashi unidic-lite` を実行してください。"
     ) from error
 
 # ふりがな生成関数
