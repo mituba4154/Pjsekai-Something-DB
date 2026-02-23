@@ -53,7 +53,6 @@ columns_to_extract = [3]  # 0が1列目、2が3列目を意味します
 
 for table in soup.find_all('table'):  # 全てのテーブルを探索
     rows = table.find_all('tr')  # 各行（trタグ）
-    elapsed_time = time.time() - start_time
     for row in rows:
         elapsed_time = time.time() - start_time
         if elapsed_time > 60:  # 60秒以上かかる場合、強制的に停止
@@ -69,7 +68,7 @@ for table in soup.find_all('table'):  # 全てのテーブルを探索
                     furigana = get_furigana(text)  # ふりがなを生成
                     lyrics.append([text, furigana])  # 歌詞とふりがなをペアにして追加
 
-    if elapsed_time > 60:
+    if time.time() - start_time > 60:
         break
 
 # CSVに歌詞とふりがなを保存
