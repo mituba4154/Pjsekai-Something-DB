@@ -12,24 +12,26 @@ except ModuleNotFoundError as error:
         f"必要なライブラリ ({error.name}) が見つかりません。`pip install requests beautifulsoup4 fugashi unidic-lite` を実行してください。"
     ) from error
 
+dic_dir = unidic_lite.DICDIR
+mecabrc = os.path.join(dic_dir, "mecabrc")
+tagger = GenericTagger(f'-r "{mecabrc}" -d "{dic_dir}"')
+
 # ふりがな生成関数
 def get_furigana(text):
-    dic_dir = unidic_lite.DICDIR
-    mecabrc = os.path.join(dic_dir, "mecabrc")
-    tagger = GenericTagger(f'-r "{mecabrc}" -d "{dic_dir}"')
     words = tagger.parse(text).splitlines()
     furigana = []
     for word in words:
-        if word != "":  # 空行を無視
-            try:
-                surface, feature = word.split("\t")
-                features = feature.split(",")
-                if len(features) > 7:
-                    furigana.append(features[7])  # ふりがなを取得
-                else:
-                    furigana.append(surface)  # ふりがながない場合はそのまま
-            except ValueError:
-                continue  # 解析結果が予期しない場合（例えば空行や異常な形式）はスキップ
+        if word in ("", "EOS"):
+            continue
+        try:
+            surface, feature = word.split("\t")
+            features = feature.split(",")
+            if len(features) > 6:
+                furigana.append(features[6])  # 読みを取得
+            else:
+                furigana.append(surface)  # ふりがながない場合はそのまま
+        except ValueError:
+            continue  # 解析結果が予期しない場合（例えば空行や異常な形式）はスキップ
     return "".join(furigana)
 
 # URL設定
@@ -51,7 +53,12 @@ columns_to_extract = [3]  # 0が1列目、2が3列目を意味します
 
 for table in soup.find_all('table'):  # 全てのテーブルを探索
     rows = table.find_all('tr')  # 各行（trタグ）
+    elapsed_time = time.time() - start_time
     for row in rows:
+        elapsed_time = time.time() - start_time
+        if elapsed_time > 60:  # 60秒以上かかる場合、強制的に停止
+            print("処理が遅すぎます。停止します。")
+            break
         columns = row.find_all('td')  # 各セル（tdタグ）
         
         # 指定した列のみ抽出
@@ -62,10 +69,7 @@ for table in soup.find_all('table'):  # 全てのテーブルを探索
                     furigana = get_furigana(text)  # ふりがなを生成
                     lyrics.append([text, furigana])  # 歌詞とふりがなをペアにして追加
 
-    # 処理時間の確認（ループが無限に回らないように制限）
-    elapsed_time = time.time() - start_time
-    if elapsed_time > 60:  # 60秒以上かかる場合、強制的に停止
-        print("処理が遅すぎます。停止します。")
+    if elapsed_time > 60:
         break
 
 # CSVに歌詞とふりがなを保存
