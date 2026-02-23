@@ -1,5 +1,6 @@
 import time
 import csv
+import os
 
 try:
     import requests
@@ -13,7 +14,9 @@ except ModuleNotFoundError as error:
 
 # ふりがな生成関数
 def get_furigana(text):
-    tagger = GenericTagger('-d "' + unidic_lite.DICDIR.replace("\\", "/") + '"')
+    dic_dir = unidic_lite.DICDIR
+    mecabrc = os.path.join(dic_dir, "mecabrc")
+    tagger = GenericTagger(f'-r "{mecabrc}" -d "{dic_dir}"')
     words = tagger.parse(text).splitlines()
     furigana = []
     for word in words:
