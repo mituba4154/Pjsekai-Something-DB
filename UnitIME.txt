@@ -8,6 +8,7 @@
 
 ばちゃしん	VIRTUAL SINGER	短縮よみ
 れおに	Leo/need	短縮よみ
+レオニ	Leo/need	短縮よみ
 もあじゃん	MORE MORE JUMP！	短縮よみ
 もあじゃん	MORE MORE JUMP!	短縮よみ
 ももじゃん	MORE MORE JUMP！	短縮よみ
@@ -16,6 +17,7 @@
 わんだしょ	ワンダーランズ×ショウタイム	短縮よみ
 にーご	25時、ナイトコードで。	短縮よみ
 にご	25時、ナイトコードで。	短縮よみ
+ニーゴ	25時、ナイトコードで。	短縮よみ
 
 あおはるふれんず	青春/friends	固有名詞
 ゆめゆめじゃんぷ	YUME YUME JUMP!	固有名詞
