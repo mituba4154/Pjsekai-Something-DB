@@ -3,10 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from fugashi import GenericTagger  # TaggerではなくGenericTaggerを使用
+import unidic_lite
 
 # ふりがな生成関数
 def get_furigana(text):
-    tagger = GenericTagger()
+    tagger = GenericTagger('-d "' + unidic_lite.DICDIR.replace("\\", "/") + '"')
     words = tagger.parse(text).splitlines()
     furigana = []
     for word in words:
