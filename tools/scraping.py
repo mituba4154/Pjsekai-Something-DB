@@ -1,9 +1,15 @@
 import time
-import requests
-from bs4 import BeautifulSoup
 import csv
-from fugashi import GenericTagger  # TaggerではなくGenericTaggerを使用
-import unidic_lite
+
+try:
+    import requests
+    from bs4 import BeautifulSoup
+    from fugashi import GenericTagger  # TaggerではなくGenericTaggerを使用
+    import unidic_lite
+except ModuleNotFoundError as error:
+    raise SystemExit(
+        f"必要なライブラリ ({error.name}) が見つかりません。`pip install requests beautifulsoup4 fugashi unidic-lite` を実行してください。"
+    ) from error
 
 # ふりがな生成関数
 def get_furigana(text):
